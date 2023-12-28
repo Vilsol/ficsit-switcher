@@ -7,6 +7,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+const smmRelease = "https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest"
+const cliRelease = "https://github.com/satisfactorymodding/ficsit-cli/releases/latest"
+
 var smm = map[string]map[string]string{
 	"windows": {
 		"amd64": "https://github.com/satisfactorymodding/SatisfactoryModManager/releases/latest/download/Satisfactory-Mod-Manager-Setup.exe",
@@ -133,13 +136,13 @@ func handleSMM(context echo.Context) error {
 	if url := resolveMap(smm, context); url != nil {
 		return context.Redirect(301, *url)
 	}
-	return context.NoContent(404)
+	return context.Redirect(301, smmRelease)
 }
 
 func handleCLI(context echo.Context) error {
 	archData := resolveMap(cli, context)
 	if archData == nil {
-		return context.NoContent(404)
+		return context.Redirect(301, cliRelease)
 	}
 
 	packaging := context.Param("packaging")
@@ -149,7 +152,7 @@ func handleCLI(context echo.Context) error {
 
 	url, ok := (*archData)[packaging]
 	if !ok {
-		return context.NoContent(404)
+		return context.Redirect(301, cliRelease)
 	}
 
 	return context.Redirect(301, url)
